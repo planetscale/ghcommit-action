@@ -13,4 +13,27 @@ jobs:
       - uses: actions/checkout@v3
       - run: make lint
       - run: make test
-# TODO: on main branch, run autotag to bump the version and then hit the api to publish the tag (signed)
+
+  release:
+    needs: [test]
+    # only create a release on main builds:
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: checkout code with full history (unshallow)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: fetch tags
+        run: git fetch --force --tags
+
+      - name: install autotag binary
+        run: |
+          curl -sL https://git.io/autotag-install | sudo sh -s -- -b /usr/local/bin
+
+      - name: increment tag and create release
+        run: |
+          set -eou pipefail
+
+          new_version=$(autotag -v)
+          gh release create v"${new_version}"
