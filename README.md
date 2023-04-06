@@ -1,7 +1,7 @@
 # ghcommit-action
 
 A GitHub Action to detect changed files during a Workflow run and to commit and
-push them back to the GitHub repository using the [ghcommit](https://github.com/planetscale/ghcommit) utility.
+push them back to the GitHub repository using the [`ghcommit`](https://github.com/planetscale/ghcommit) utility.
 
 The advantage of using `ghcommit` is that the commits will be signed by GitHub's
 GPG key and show as **Verified**. This is important for repositories that require
