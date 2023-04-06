@@ -27,3 +27,18 @@ setup() {
   assert_success
   assert_output --partial "Success"
 }
+
+@test "no changes" {
+  local commit_message='msg'
+  local repo='org/repo'
+  local branch='main'
+  local file_pattern='.'
+
+  stub git \
+    "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
+    "status -s --porcelain=v1 -z -- . : echo"
+
+  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$file_pattern"
+  assert_success
+  assert_output --partial "No changes detected"
+}

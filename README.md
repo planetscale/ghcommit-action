@@ -36,7 +36,7 @@ jobs:
       # Run steps that make changes to the local repo here.
 
       # Commit all changed files back to the repository
-      - uses: planetscale/ghcommit-action@v0.0.1
+      - uses: planetscale/ghcommit-action@v0.0.2
         with:
           commit_changes: "🤖 fmt"
           repo: ${{ github.repository }}
@@ -49,7 +49,7 @@ Example showing all options:
 
 
 ```yaml
-      - uses: planetscale/ghcommit-action@v0.0.1
+      - uses: planetscale/ghcommit-action@v0.0.2
         with:
           commit_changes: "🤖 fmt"
           repo: ${{ github.repository }}

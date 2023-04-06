@@ -37,7 +37,10 @@ while IFS= read -r -d $'\0' line; do
   #   'R  main.sh -> main.sh.new'
 done < <(git status -s --porcelain=v1 -z -- $FILE_PATTERN)
 
-#TODO handle case where ther ar eno changes
+if [[ "${#adds[@]}" -eq 0 && "${#deletes[@]}" -eq 0 ]]; then
+  echo "No changes detected, exiting"
+  exit 0
+fi
 
 ghcommit \
   -b "$BRANCH" \
