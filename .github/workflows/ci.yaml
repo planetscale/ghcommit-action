@@ -37,6 +37,6 @@ jobs:
           set -eou pipefail
 
           new_version=$(autotag -v)
-          gh release create v"${new_version}"
+          gh release create v"${new_version}" --target main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
