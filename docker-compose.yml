@@ -1,0 +1,15 @@
+version: '2'
+services:
+  lint:
+    image: koalaman/shellcheck-alpine:v0.8.0
+    volumes:
+      - ".:/plugin:ro"
+    entrypoint: sh
+    command:
+      - -c
+      - 'shellcheck ./plugin/*.sh'
+
+  tests:
+    image: buildkite/plugin-tester
+    volumes:
+      - ".:/plugin:ro"

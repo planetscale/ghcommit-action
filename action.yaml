@@ -1,0 +1,30 @@
+name: 'Commit git changes'
+description: 'Commit git changes directly to GitHub using the GraphQL API'
+
+branding:
+  color: 'orange'
+  icon: 'git-commit'
+
+inputs:
+  commit_message:
+    description: The commit message to use.
+    required: true
+  repo:
+    description: The name of the repo to commit to in "owner/repo" format.
+    required: true
+  branch:
+    description: The name of the branch to commit to.
+    required: true
+  file_pattern:
+    description: File pattern used for `git add`. For example `src/*.js`
+    required: false
+    default: '.'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.commit_message }}
+    - ${{ inputs.repo }}
+    - ${{ inputs.branch }}
+    - ${{ inputs.file_pattern }}

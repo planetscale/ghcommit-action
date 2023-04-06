@@ -1,0 +1,15 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && !contains(toJson(github.event.commits), '[ci skip]') && !contains(toJson(github.event.commits), '[skip ci]')
+    steps:
+      - uses: actions/checkout@v3
+      - run: make lint
+      - run: make test
