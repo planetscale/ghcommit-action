@@ -2,8 +2,9 @@
 
 load '/usr/local/lib/bats/load.bash'
 
-export GIT_STUB_DEBUG=/dev/tty
-export GHCOMMIT_STUB_DEBUG=/dev/tty
+# uncomment to debug these stubs:
+# export GIT_STUB_DEBUG=/dev/tty
+# export GHCOMMIT_STUB_DEBUG=/dev/tty
 
 setup() {
   export GITHUB_WORKSPACE=/tmp
