@@ -25,5 +25,6 @@ setup() {
 
   run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$file_pattern"
   assert_success
-  assert_output --partial "Success"
+  #assert_output --partial "Success"
+  assert_output --partial "blah"
 }
