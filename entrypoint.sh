@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+set -x
 
 COMMIT_MESSAGE="${1:?Missing commit_message input}"
 REPO="${2:?Missing repo input}"
