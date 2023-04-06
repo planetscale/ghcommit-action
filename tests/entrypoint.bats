@@ -9,7 +9,7 @@ setup() {
   export GITHUB_WORKSPACE=/tmp
 }
 
-@test "parses git status output and generates correct flags for ghcommit"
+@test "parses git status output and generates correct flags for ghcommit" {
   local commit_message='msg'
   local repo='org/repo'
   local branch='main'
