@@ -19,7 +19,13 @@ a Linux host, eg: `ubuntu-latest`.
 ```yaml
 name: fmt
 
-on: push
+on:
+  # NOTE: Need to run on a PR so that the ${{ github.head_ref }} (branch) is non-null
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   fmt-code:
