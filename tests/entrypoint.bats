@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load '/usr/local/lib/bats/load.bash'
+load "${BATS_PLUGIN_PATH}/load.bash"
 
 # uncomment to debug these stubs:
 # export GIT_STUB_DEBUG=/dev/tty
