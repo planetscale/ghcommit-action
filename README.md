@@ -46,7 +46,9 @@ jobs:
         with:
           commit_message: "🤖 fmt"
           repo: ${{ github.repository }}
-          branch: ${{ github.head_ref }}
+          branch: ${{ github.head_ref || github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 ```
 
 > NOTE: These examples may not show the latest version. Check the [GitHub Releases](https://github.com/planetscale/ghcommit-action/releases) page to see the latest version tag
@@ -59,8 +61,10 @@ Example showing all options:
         with:
           commit_message: "🤖 fmt"
           repo: ${{ github.repository }}
-          branch: ${{ github.head_ref }}
+          branch: ${{ github.head_ref || github.ref_name }}
           file_pattern: '*.txt *.md *.json *.hcl'
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 ```
 
 See [`action.yaml`](./action.yaml) for current list of supported inputs.
