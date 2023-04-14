@@ -5,7 +5,8 @@ set -euo pipefail
 COMMIT_MESSAGE="${1:?Missing commit_message input}"
 REPO="${2:?Missing repo input}"
 BRANCH="${3:?Missing branch input}"
-FILE_PATTERN="${4:?Missing file_pattern input}"
+EMPTY="${4:-false}"
+FILE_PATTERN="${5:?Missing file_pattern input}"
 
 git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
@@ -37,14 +38,21 @@ while IFS= read -r -d $'\0' line; do
   #   'R  main.sh -> main.sh.new'
 done < <(git status -s --porcelain=v1 -z -- $FILE_PATTERN)
 
-if [[ "${#adds[@]}" -eq 0 && "${#deletes[@]}" -eq 0 ]]; then
+if [[ "${#adds[@]}" -eq 0 && "${#deletes[@]}" -eq 0 && "$EMPTY" == "false" ]]; then
   echo "No changes detected, exiting"
   exit 0
 fi
 
-ghcommit \
-  -b "$BRANCH" \
-  -r "$REPO" \
-  -m "$COMMIT_MESSAGE" \
-  "${adds[@]/#/--add=}" \
-  "${deletes[@]/#/--delete=}"
+ghcommit_args=()
+ghcommit_args+=(-b "$BRANCH")
+ghcommit_args+=(-r "$REPO")
+ghcommit_args+=(-m "$COMMIT_MESSAGE")
+
+if [[ "$EMPTY" =~ ^(true|1|yes)$ ]]; then
+  ghcommit_args+=(--empty)
+fi
+
+ghcommit_args+=("${adds[@]/#/--add=}")
+ghcommit_args+=("${deletes[@]/#/--delete=}")
+
+ghcommit "${ghcommit_args[@]}"
