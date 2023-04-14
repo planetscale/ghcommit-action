@@ -14,6 +14,7 @@ setup() {
   local commit_message='msg'
   local repo='org/repo'
   local branch='main'
+  local empty='false'
   local file_pattern='.'
 
   stub git \
@@ -23,7 +24,7 @@ setup() {
   stub ghcommit \
     '-b main -r org/repo -m msg --add=README.md --add=foo.txt --delete=\""a path with spaces oh joy/file.txt\"" : echo Success'
 
-  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$file_pattern"
+  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
   assert_success
   assert_output --partial "Success"
 }
@@ -32,13 +33,33 @@ setup() {
   local commit_message='msg'
   local repo='org/repo'
   local branch='main'
+  local empty='false'
   local file_pattern='.'
 
   stub git \
     "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
     "status -s --porcelain=v1 -z -- . : echo"
 
-  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$file_pattern"
+  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
   assert_success
   assert_output --partial "No changes detected"
+}
+
+@test "no changes with --empty flag creates empty commit" {
+  local commit_message='msg'
+  local repo='org/repo'
+  local branch='main'
+  local empty='true'
+  local file_pattern='.'
+
+  stub git \
+    "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
+    "status -s --porcelain=v1 -z -- . : echo"
+
+  stub ghcommit \
+    '-b main -r org/repo -m msg --empty : echo Success'
+
+  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
+  assert_success
+  assert_output --partial "Success"
 }

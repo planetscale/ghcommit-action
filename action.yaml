@@ -1,9 +1,9 @@
-name: 'Commit git changes'
-description: 'Commit git changes directly to GitHub using the GraphQL API'
+name: "Commit git changes"
+description: "Commit git changes directly to GitHub using the GraphQL API"
 
 branding:
-  color: 'orange'
-  icon: 'git-commit'
+  color: "orange"
+  icon: "git-commit"
 
 inputs:
   commit_message:
@@ -15,16 +15,21 @@ inputs:
   branch:
     description: The name of the branch to commit to.
     required: true
+  empty:
+    description: Allow making an empty commit if there are no changes.
+    required: false
+    default: "false"
   file_pattern:
     description: File pattern used for `git add`. For example `src/*.js`
     required: false
-    default: '.'
+    default: "."
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
   args:
     - ${{ inputs.commit_message }}
     - ${{ inputs.repo }}
     - ${{ inputs.branch }}
+    - ${{ inputs.empty }}
     - ${{ inputs.file_pattern }}
