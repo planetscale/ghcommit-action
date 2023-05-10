@@ -1,6 +1,6 @@
 FROM ghcr.io/planetscale/ghcommit:v0.1.0 AS ghcommit
 
-FROM alpine:3.17 AS base
+FROM alpine:3.18 AS base
 
 COPY --from=ghcommit /ghcommit /usr/bin/ghcommit
 
