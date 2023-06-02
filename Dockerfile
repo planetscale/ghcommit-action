@@ -1,4 +1,4 @@
-FROM ghcr.io/planetscale/ghcommit:v0.1.0 AS ghcommit
+FROM ghcr.io/planetscale/ghcommit:v0.1.1 AS ghcommit
 
 FROM alpine:3.18 AS base
 
