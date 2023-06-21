@@ -15,11 +15,31 @@ deletes=()
 
 # shellcheck disable=SC2086
 while IFS= read -r -d $'\0' line; do
+  # Uncomment for debugging:
+  #echo "line: '$line'"
+
   # Extract the status in the tree and status in the index (first two characters)
   index_status="${line:0:1}"
   tree_status="${line:1:1}"
+
+  # Renamed files have status code 'R' and two filenames separated by NUL. We need to read
+  # an additional chunk (up to the next NUL) to get the new filename.
+  if [[ "$index_status" == "R" || "$tree_status" == "R" ]]; then
+    IFS= read -r -d $'\0' new_filename
+    filename="${line:3}"
+
+    echo "Renamed file detected:"
+    echo "Old Filename: $filename"
+    echo "New Filename: $new_filename"
+    echo "-----------------------------"
+    adds+=("$new_filename")
+    deletes+=("$filename")
+    continue
+  fi
+
   # Extract the filename by removing the first three characters (two statuses and a whitespace)
   filename="${line:3}"
+  echo "Filename: $filename"
 
   # Print the parsed information, useful for debugging
   echo "Index Status: $index_status"
@@ -34,8 +54,6 @@ while IFS= read -r -d $'\0' line; do
   # handle deletes (D):
   [[ "$tree_status" =~ D || "$index_status" =~ D ]] && deletes+=("$filename")
 
-  # TODO: handle renames (R) and copies (C). Example rename status line:
-  #   'R  main.sh -> main.sh.new'
 done < <(git status -s --porcelain=v1 -z -- $FILE_PATTERN)
 
 if [[ "${#adds[@]}" -eq 0 && "${#deletes[@]}" -eq 0 && "$EMPTY" == "false" ]]; then
