@@ -25,15 +25,15 @@ while IFS= read -r -d $'\0' line; do
   # Renamed files have status code 'R' and two filenames separated by NUL. We need to read
   # an additional chunk (up to the next NUL) to get the new filename.
   if [[ "$index_status" == "R" || "$tree_status" == "R" ]]; then
-    IFS= read -r -d $'\0' new_filename
-    filename="${line:3}"
+    IFS= read -r -d $'\0' old_filename
+    new_filename="${line:3}"
 
     echo "Renamed file detected:"
-    echo "Old Filename: $filename"
+    echo "Old Filename: $old_filename"
     echo "New Filename: $new_filename"
     echo "-----------------------------"
     adds+=("$new_filename")
-    deletes+=("$filename")
+    deletes+=("$old_filename")
     continue
   fi
 
