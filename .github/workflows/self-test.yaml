@@ -1,7 +1,9 @@
 name: self-test
 
-on:
-  pull_request:
+# Uncomment to run test on your branch, but keep in mind there will be an extra
+# commit added to your PR
+# on:
+#   pull_request:
 
 jobs:
   self-test:
