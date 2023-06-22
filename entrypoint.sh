@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+[[ -n "${DEBUG:-}" ]] && set -x
 
 COMMIT_MESSAGE="${1:?Missing commit_message input}"
 REPO="${2:?Missing repo input}"
@@ -15,8 +16,7 @@ deletes=()
 
 # shellcheck disable=SC2086
 while IFS= read -r -d $'\0' line; do
-  # Uncomment for debugging:
-  #echo "line: '$line'"
+  [[ -n "${DEBUG:-}" ]] && echo "line: '$line'"
 
   # Extract the status in the tree and status in the index (first two characters)
   index_status="${line:0:1}"
@@ -72,5 +72,7 @@ fi
 
 ghcommit_args+=("${adds[@]/#/--add=}")
 ghcommit_args+=("${deletes[@]/#/--delete=}")
+
+[[ -n "${DEBUG:-}" ]] && echo "ghcommit args: '${ghcommit_args[*]}'"
 
 ghcommit "${ghcommit_args[@]}"
