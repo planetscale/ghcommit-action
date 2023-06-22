@@ -1,0 +1,28 @@
+name: self-test
+
+# Uncomment to run test on your branch, but keep in mind there will be an extra
+# commit added to your PR
+# on:
+#   pull_request:
+
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: modify some files
+        run: |
+          git mv README.md README.md.old
+          echo 'test' >new.file
+
+      - name: ghcommit
+        uses: ./
+        with:
+          commit_message: "test"
+          repo: ${{ github.repository }}
+          branch: ${{ github.head_ref || github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          DEBUG: 1
