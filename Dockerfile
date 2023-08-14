@@ -1,6 +1,6 @@
 FROM ghcr.io/planetscale/ghcommit:v0.1.6 AS ghcommit
 
-FROM alpine:3.18 AS base
+FROM public.ecr.aws/docker/library/alpine:3.18 AS base
 
 COPY --from=ghcommit /ghcommit /usr/bin/ghcommit
 
