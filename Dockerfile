@@ -1,4 +1,4 @@
-FROM ghcr.io/planetscale/ghcommit:v0.1.6 AS ghcommit
+FROM ghcr.io/planetscale/ghcommit:v0.1.7 AS ghcommit
 
 FROM public.ecr.aws/docker/library/alpine:3.18 AS base
 
