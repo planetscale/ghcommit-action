@@ -7,14 +7,13 @@ COMMIT_MESSAGE="${1:?Missing commit_message input}"
 REPO="${2:?Missing repo input}"
 BRANCH="${3:?Missing branch input}"
 EMPTY="${4:-false}"
-FILE_PATTERN="${5:?Missing file_pattern input}"
+read -r -a FILE_PATTERNS <<<"${5:?Missing file_pattern input}"
 
 git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
 adds=()
 deletes=()
 
-# shellcheck disable=SC2086
 while IFS= read -r -d $'\0' line; do
   [[ -n "${DEBUG:-}" ]] && echo "line: '$line'"
 
@@ -54,7 +53,7 @@ while IFS= read -r -d $'\0' line; do
   # handle deletes (D):
   [[ "$tree_status" =~ D || "$index_status" =~ D ]] && deletes+=("$filename")
 
-done < <(git status -s --porcelain=v1 -z -- $FILE_PATTERN)
+done < <(git status -s --porcelain=v1 -z -- "${FILE_PATTERNS[@]}")
 
 if [[ "${#adds[@]}" -eq 0 && "${#deletes[@]}" -eq 0 && "$EMPTY" == "false" ]]; then
   echo "No changes detected, exiting"
