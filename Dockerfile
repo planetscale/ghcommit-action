@@ -1,6 +1,6 @@
 FROM ghcr.io/planetscale/ghcommit:v0.1.10 AS ghcommit
 
-FROM public.ecr.aws/docker/library/alpine:3.18 AS base
+FROM pscale.dev/wolfi-prod/base:latest AS base
 
 COPY --from=ghcommit /ghcommit /usr/bin/ghcommit
 
