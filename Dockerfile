@@ -1,4 +1,4 @@
-FROM ghcr.io/planetscale/ghcommit:v0.1.14 AS ghcommit
+FROM ghcr.io/planetscale/ghcommit:v0.1.15 AS ghcommit
 
 FROM pscale.dev/wolfi-prod/base:latest AS base
 
