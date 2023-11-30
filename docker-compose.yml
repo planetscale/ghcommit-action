@@ -1,7 +1,7 @@
 version: '2'
 services:
   lint:
-    image: koalaman/shellcheck-alpine:v0.8.0
+    image: koalaman/shellcheck-alpine:v0.8.0@sha256:f42fde76d2d14a645a848826e54a4d650150e151d9c81057c898da89a82c8a56
     volumes:
       - ".:/plugin:ro"
     entrypoint: sh
@@ -10,6 +10,6 @@ services:
       - 'shellcheck ./plugin/*.sh'
 
   tests:
-    image: buildkite/plugin-tester:v4.0.0
+    image: buildkite/plugin-tester:v4.0.0@sha256:73958fc0768b18ec691e9def050dbc25f814411c9901abfac8cd1f2f361ce8d5
     volumes:
       - ".:/plugin:ro"
