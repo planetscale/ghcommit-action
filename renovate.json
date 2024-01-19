@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>planetscale/renovate-config"
+    "github>planetscale/renovate-config"
   ]
   "packageRules": [
     {
