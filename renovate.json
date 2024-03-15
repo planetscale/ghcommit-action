@@ -1,21 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "github>planetscale/renovate-config"
-  ]
+    "github>planetscale/renovate-config",
+    "github>planetscale/renovate-config:weeklyBatchMinorPatchDigest"
+  ],
   "packageRules": [
-    {
-      "matchPackagePatterns": [
-        "*"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch",
-      "schedule": ["after 10pm on friday"]
-    },
     {
       "description": "Don't pin base image, we do not want its weekly updates.",
       "matchPackageNames": [
