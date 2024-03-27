@@ -37,7 +37,11 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      # Include the pull request ref in the checkout action to prevent merge commit
+      # https://github.com/actions/checkout?tab=readme-ov-file#checkout-pull-request-head-commit-instead-of-merge-commit
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       # Run steps that make changes to the local repo here.
 
