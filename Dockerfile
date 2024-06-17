@@ -1,4 +1,4 @@
-FROM ghcr.io/planetscale/ghcommit:v0.1.47@sha256:5c3e3964fcb8ecbc34fd7cfdf8e652f08a7f0c5529617d382d57368b17ed0628 AS ghcommit
+FROM ghcr.io/planetscale/ghcommit:v0.1.48@sha256:9ebf836e2bdbb88e536984312a9083af8c95487ad2b59a1d830672bf4d9053ea AS ghcommit
 
 FROM pscale.dev/wolfi-prod/base:latest AS base
 
