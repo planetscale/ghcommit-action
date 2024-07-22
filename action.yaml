@@ -24,6 +24,12 @@ inputs:
     required: false
     default: "."
 
+outputs:
+  commit-url:
+    description: The URL of the created commit.
+  commit-hash:
+    description: The hash of the created commit.
+
 runs:
   using: "docker"
   image: "Dockerfile"
