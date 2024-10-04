@@ -1,4 +1,4 @@
-FROM ghcr.io/planetscale/ghcommit:v0.1.50@sha256:3c980bd814944e4baa8cc8b69415b9e2ad569776b79ea21a8bb447320a842f46 AS ghcommit
+FROM ghcr.io/planetscale/ghcommit:v0.1.51@sha256:eb0fa7df39e99d74cb14adf98b9d255eeef45577698eadc6eef546f278256eb1 AS ghcommit
 
 # hadolint ignore=DL3007
 FROM pscale.dev/wolfi-prod/base:latest AS base
