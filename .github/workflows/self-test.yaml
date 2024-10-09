@@ -17,6 +17,11 @@ jobs:
           git mv README.md README.md.old
           echo 'test' >new.file
 
+      # - build temp docker image
+      # - mutate version in Dockerfile to use the temp image
+      # - run plugin
+      # - can we reset the branch after the test?
+
       - name: ghcommit
         uses: ./
         with:
