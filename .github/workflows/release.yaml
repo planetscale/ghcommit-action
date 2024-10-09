@@ -22,7 +22,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && !contains(toJson(github.event.commits), '[ci skip]') && !contains(toJson(github.event.commits), '[skip ci]')
+    if: >
+      (github.event_name == 'push' && !contains(toJson(github.event.commits), '[ci skip]') && !contains(toJson(github.event.commits), '[skip ci]'))
+      || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - run: make lint
