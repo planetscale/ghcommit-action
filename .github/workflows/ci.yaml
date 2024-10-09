@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     branches:
-      - "*"
+      - '**'
 
 jobs:
   test:
@@ -13,40 +13,3 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - run: make lint
       - run: make test
-
-  release:
-    needs: [test]
-    # only create a release on main builds:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout code with full history (unshallow)
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-        with:
-          fetch-depth: 0
-          fetch-tags: true
-
-      # only generate a new release if certain files change:
-      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
-        id: filter
-        with:
-          filters: |
-            app:
-              - 'action.yaml'
-              - '**.sh'
-              - 'Dockerfile'
-
-      - name: install autotag binary
-        if: steps.filter.outputs.app == 'true'
-        run: |
-          curl -sL https://git.io/autotag-install | sudo sh -s -- -b /usr/local/bin
-
-      - name: increment tag and create release
-        if: steps.filter.outputs.app == 'true'
-        run: |
-          set -eou pipefail
-
-          new_version=$(autotag -vn)
-          gh release create v"${new_version}" --target main --title "v${new_version}" --generate-notes
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
