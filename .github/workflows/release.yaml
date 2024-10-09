@@ -48,7 +48,7 @@ jobs:
           set -xeou pipefail
 
           curl -sL https://git.io/autotag-install | sh -s -- -b "${RUNNER_TEMP}/bin"
-          new_version=$(${RUNNER_TEMP}/bin/autotag -n -b joem/optimize-image-pull)
+          new_version=$(${RUNNER_TEMP}/bin/autotag -n)
           echo "new_version=$new_version" >> $GITHUB_ENV
 
       - name: login to ghcr.io
