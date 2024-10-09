@@ -1,1 +1,1 @@
-FROM ghcr.io/planetscale/ghcommit-action:v0.2.0
+FROM ghcr.io/planetscale/ghcommit-action:v0.2.0@sha256:6b0f84e1d4f387a5b3df620e69c5eadc7402ad57c4182431fc686a6b74a67233
