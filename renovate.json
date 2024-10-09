@@ -4,6 +4,9 @@
     "github>planetscale/renovate-config",
     "github>planetscale/renovate-config:weeklyBatchMinorPatchDigest"
   ],
+  "ignorePaths": [
+    "Dockerfile"
+  ]
   "packageRules": [
     {
       "description": "Don't pin base image, we do not want its weekly updates.",
