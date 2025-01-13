@@ -8,6 +8,7 @@ COPY --from=ghcommit /ghcommit /usr/bin/ghcommit
 # hadolint ignore=DL3018
 RUN apk add --no-cache \
         bash \
+        git-crypt \
         git
 
 COPY entrypoint.sh /entrypoint.sh
