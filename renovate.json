@@ -9,9 +9,9 @@
   ],
   "packageRules": [
     {
-      "description": "Don't pin base image, we do not want its weekly updates.",
       "matchPackageNames": [
-        "pscale.dev/wolfi-prod/base"
+        "pscale.dev/wolfi-prod/base",
+        "ghcr.io/planetscale/ghcommit"
       ],
       "pinDigests": false
     }

@@ -1,7 +1,7 @@
-FROM ghcr.io/planetscale/ghcommit:v0.1.55@sha256:1e619715b0b8b4f80571ae0c1afaebc2329f5eb5514c878303dbe43ce0944563 AS ghcommit
+FROM --platform=$TARGETARCH ghcr.io/planetscale/ghcommit:v0.1.56 AS ghcommit
 
 # hadolint ignore=DL3007
-FROM pscale.dev/wolfi-prod/base:latest AS base
+FROM --platform=$TARGETARCH pscale.dev/wolfi-prod/base:latest AS base
 
 COPY --from=ghcommit /ghcommit /usr/bin/ghcommit
 
