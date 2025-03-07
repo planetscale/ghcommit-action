@@ -81,7 +81,7 @@ jobs:
           sed -i'' -Ee "s/ghcommit-action:v(.*)/ghcommit-action:v${new_version}/" Dockerfile
 
       - name: Commit changes
-        uses: planetscale/ghcommit-action@9400254a26464337cbe5af17c5f25075134e0089 # v0.2.7
+        uses: planetscale/ghcommit-action@86434b0b2603b57a211bae56ceee257b85646630 # v0.2.8
         with:
           commit_message: "🤖 Bump version in Dockerfile"
           repo: ${{ github.repository }}
