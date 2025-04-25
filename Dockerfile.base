@@ -1,4 +1,4 @@
-FROM --platform=$TARGETARCH ghcr.io/planetscale/ghcommit:v0.1.67 AS ghcommit
+FROM --platform=$TARGETARCH ghcr.io/planetscale/ghcommit:v0.1.69 AS ghcommit
 
 # hadolint ignore=DL3007
 FROM --platform=$TARGETARCH pscale.dev/wolfi-prod/base:latest AS base
