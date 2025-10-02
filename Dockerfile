@@ -1,1 +1,1 @@
-FROM ghcr.io/planetscale/ghcommit-action:v0.2.17
+FROM ghcr.io/planetscale/ghcommit-action:v0.2.18
