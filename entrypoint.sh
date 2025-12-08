@@ -50,6 +50,10 @@ while IFS= read -r -d $'\0' line; do
   # handle adds (A), modifications (M), and type changes (T):
   [[ "$tree_status" =~ A|M|T || "$index_status" =~ A|M|T ]] && adds+=("$filename")
 
+  # handle untracked files (??):
+  # https://github.com/planetscale/ghcommit-action/issues/43#issuecomment-1950986790
+  [[ "$tree_status" == "?" && "$index_status" == "?" ]] && adds+=("$filename")
+
   # handle deletes (D):
   [[ "$tree_status" =~ D || "$index_status" =~ D ]] && deletes+=("$filename")
 

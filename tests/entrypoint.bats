@@ -76,3 +76,26 @@ setup() {
   assert_file_exist "$GITHUB_OUTPUT"
   assert_file_contains "$GITHUB_OUTPUT" "commit-url=https://localhost/foo"
 }
+
+@test "handles untracked files" {
+  local commit_message='msg'
+  local repo='org/repo'
+  local branch='main'
+  local empty='false'
+  local file_pattern='.'
+
+  export GITHUB_OUTPUT="$BATS_TEST_TMPDIR/github-output"
+
+  stub git \
+    "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
+    "status -s --porcelain=v1 -z -- . : cat ./tests/fixtures/git-status.out-2 | tr '\n' '\0'"
+
+  stub ghcommit \
+    '-b main -r org/repo -m msg --add=untracked.txt --add=new-file.md --add=modified.txt : echo Success. New commit: https://localhost/bar'
+
+  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
+  assert_success
+  assert_output --partial "Success"
+  assert_file_exist "$GITHUB_OUTPUT"
+  assert_file_contains "$GITHUB_OUTPUT" "commit-url=https://localhost/bar"
+}
