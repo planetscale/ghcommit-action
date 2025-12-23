@@ -26,7 +26,7 @@ jobs:
       (github.event_name == 'push' && !contains(toJson(github.event.commits), '[ci skip]') && !contains(toJson(github.event.commits), '[skip ci]'))
       || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       - run: make lint
       - run: make test
 
@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: checkout code with full history (unshallow)
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -64,7 +64,7 @@ jobs:
       - name: Set up QEMU (for arm64 builds)
         uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       - name: Build and push Dockerfile.base (ghcr.io/planetscale/ghcommit-action)
         run: |
@@ -81,7 +81,7 @@ jobs:
           sed -i'' -Ee "s/ghcommit-action:v(.*)/ghcommit-action:v${new_version}/" Dockerfile
 
       - name: Commit changes
-        uses: planetscale/ghcommit-action@343f41817a6a0f882f18bbc59fdd37f49452736f # v0.2.19
+        uses: planetscale/ghcommit-action@25309d8005ac7c3bcd61d3fe19b69e0fe47dbdde # v0.2.20
         with:
           commit_message: "🤖 Bump version in Dockerfile"
           repo: ${{ github.repository }}
