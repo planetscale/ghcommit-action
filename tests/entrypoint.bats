@@ -26,7 +26,7 @@ setup() {
   # of the git status output.
   stub git \
     "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
-    "status -s --porcelain=v1 -z -- . : cat ./tests/fixtures/git-status.out-1 | tr '\n' '\0'"
+    "status -s --porcelain=v1 -z -uall -- . : cat ./tests/fixtures/git-status.out-1 | tr '\n' '\0'"
 
   stub ghcommit \
     '-b main -r org/repo -m msg --add=README.md --add=foo.txt --add=new.file --delete=old.file --delete=\""a path with spaces oh joy/file.txt\"" : echo Success. New commit: https://localhost/foo'
@@ -47,7 +47,7 @@ setup() {
 
   stub git \
     "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
-    "status -s --porcelain=v1 -z -- . : echo"
+    "status -s --porcelain=v1 -z -uall -- . : echo"
 
   run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
   assert_success
@@ -65,7 +65,7 @@ setup() {
 
   stub git \
     "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
-    "status -s --porcelain=v1 -z -- . : echo"
+    "status -s --porcelain=v1 -z -uall -- . : echo"
 
   stub ghcommit \
     '-b main -r org/repo -m msg --empty : echo Success. New commit: https://localhost/foo'
@@ -88,10 +88,33 @@ setup() {
 
   stub git \
     "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
-    "status -s --porcelain=v1 -z -- . : cat ./tests/fixtures/git-status.out-2 | tr '\n' '\0'"
+    "status -s --porcelain=v1 -z -uall -- . : cat ./tests/fixtures/git-status.out-2 | tr '\n' '\0'"
 
   stub ghcommit \
     '-b main -r org/repo -m msg --add=untracked.txt --add=new-file.md --add=modified.txt : echo Success. New commit: https://localhost/bar'
+
+  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
+  assert_success
+  assert_output --partial "Success"
+  assert_file_exist "$GITHUB_OUTPUT"
+  assert_file_contains "$GITHUB_OUTPUT" "commit-url=https://localhost/bar"
+}
+
+@test "handles untracked dirs" {
+  local commit_message='msg'
+  local repo='org/repo'
+  local branch='main'
+  local empty='false'
+  local file_pattern='.'
+
+  export GITHUB_OUTPUT="$BATS_TEST_TMPDIR/github-output"
+
+  stub git \
+    "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
+    "status -s --porcelain=v1 -z -uall -- . : cat ./tests/fixtures/git-status.out-3 | tr '\n' '\0'"
+
+  stub ghcommit \
+    '-b main -r org/repo -m msg --add=newdir/file1.txt --add=newdir/file2.txt : echo Success. New commit: https://localhost/bar'
 
   run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
   assert_success

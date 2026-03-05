@@ -57,7 +57,7 @@ while IFS= read -r -d $'\0' line; do
   # handle deletes (D):
   [[ "$tree_status" =~ D || "$index_status" =~ D ]] && deletes+=("$filename")
 
-done < <(git status -s --porcelain=v1 -z -- "${FILE_PATTERNS[@]}")
+done < <(git status -s --porcelain=v1 -z -uall -- "${FILE_PATTERNS[@]}")
 
 if [[ "${#adds[@]}" -eq 0 && "${#deletes[@]}" -eq 0 && "$EMPTY" == "false" ]]; then
   echo "No changes detected, exiting"
