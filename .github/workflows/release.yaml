@@ -45,11 +45,23 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: install autotag
+        # To bump: update AUTOTAG_VERSION and fetch the new SHA from the release's
+        # checksums.txt (autotag_<version>_checksums.txt, line matching 'autotag_linux_amd64$').
+        env:
+          AUTOTAG_VERSION: 1.4.3
+          AUTOTAG_SHA256: 85e7ec97d732800bb838085fd3f2e19b2aa2ee3a8da0db7fd0aaf4113a279f3a
+        run: |
+          set -euo pipefail
+          mkdir -p "${RUNNER_TEMP}/bin"
+          curl -fsSLo "${RUNNER_TEMP}/bin/autotag" \
+            "https://github.com/autotag-dev/autotag/releases/download/v${AUTOTAG_VERSION}/autotag_linux_amd64"
+          echo "${AUTOTAG_SHA256}  ${RUNNER_TEMP}/bin/autotag" | sha256sum -c -
+          chmod +x "${RUNNER_TEMP}/bin/autotag"
+
       - name: Calculate new version with autotag
         run: |
           set -xeou pipefail
-
-          curl -sL https://git.io/autotag-install | sh -s -- -b "${RUNNER_TEMP}/bin"
           new_version=$(${RUNNER_TEMP}/bin/autotag -n)
           echo "new_version=$new_version" >> $GITHUB_ENV
 
