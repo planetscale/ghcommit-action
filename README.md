@@ -67,9 +67,14 @@ Example showing all options:
           branch: ${{ github.head_ref || github.ref_name }}
           empty: true
           file_pattern: '*.txt *.md *.json *.hcl'
+          repository: 'path/to/subdir'
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 ```
+
+The `repository` input is optional. When set, it must be a relative path under
+`$GITHUB_WORKSPACE` pointing to the git repository to operate on. Defaults to
+the root of the repository (`.`).
 
 See [`action.yaml`](./action.yaml) for current list of supported inputs.
 
