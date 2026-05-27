@@ -23,6 +23,10 @@ inputs:
     description: File pattern used for `git add`. For example `src/*.js`
     required: false
     default: "."
+  repository:
+    description: Relative file path under $GITHUB_WORKSPACE to the git repository. Defaults to the root of the repository (`.`).
+    required: false
+    default: "."
 
 outputs:
   commit-url:
@@ -39,3 +43,4 @@ runs:
     - ${{ inputs.branch }}
     - ${{ inputs.empty }}
     - ${{ inputs.file_pattern }}
+    - ${{ inputs.repository }}
