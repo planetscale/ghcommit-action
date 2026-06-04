@@ -8,8 +8,14 @@ REPO="${2:?Missing repo input}"
 BRANCH="${3:?Missing branch input}"
 EMPTY="${4:-false}"
 read -r -a FILE_PATTERNS <<<"${5:?Missing file_pattern input}"
+REPOSITORY="${6:-.}"
 
-git config --global --add safe.directory "$GITHUB_WORKSPACE"
+REPOSITORY_PATH="$GITHUB_WORKSPACE/$REPOSITORY"
+echo "Repository path: $REPOSITORY_PATH"
+
+git config --global --add safe.directory "$REPOSITORY_PATH"
+
+cd "$REPOSITORY_PATH"
 
 adds=()
 deletes=()

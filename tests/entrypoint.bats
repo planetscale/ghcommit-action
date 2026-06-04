@@ -7,7 +7,7 @@ load "${BATS_PLUGIN_PATH}/load.bash"
 # export GHCOMMIT_STUB_DEBUG=/dev/tty
 
 setup() {
-  export GITHUB_WORKSPACE=/tmp
+  export GITHUB_WORKSPACE="$BATS_TEST_DIRNAME/.."
   #export DEBUG=1
 }
 
@@ -25,7 +25,7 @@ setup() {
   # to modify and prevent cat from removing the leading space on lines/entries since that is a part
   # of the git status output.
   stub git \
-    "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
+    "config --global --add safe.directory $GITHUB_WORKSPACE/. : echo stubbed" \
     "status -s --porcelain=v1 -z -- . : cat ./tests/fixtures/git-status.out-1 | tr '\n' '\0'"
 
   stub ghcommit \
@@ -46,7 +46,7 @@ setup() {
   local file_pattern='.'
 
   stub git \
-    "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
+    "config --global --add safe.directory $GITHUB_WORKSPACE/. : echo stubbed" \
     "status -s --porcelain=v1 -z -- . : echo"
 
   run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
@@ -64,7 +64,7 @@ setup() {
   export GITHUB_OUTPUT="$BATS_TEST_TMPDIR/github-output"
 
   stub git \
-    "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
+    "config --global --add safe.directory $GITHUB_WORKSPACE/. : echo stubbed" \
     "status -s --porcelain=v1 -z -- . : echo"
 
   stub ghcommit \
@@ -77,6 +77,32 @@ setup() {
   assert_file_contains "$GITHUB_OUTPUT" "commit-url=https://localhost/foo"
 }
 
+@test "switches to repository subdirectory when repository input is set" {
+  local commit_message='msg'
+  local repo='org/repo'
+  local branch='main'
+  local empty='false'
+  local file_pattern='.'
+  local repository='tests/fixtures'
+
+  export GITHUB_OUTPUT="$BATS_TEST_TMPDIR/github-output"
+
+  stub git \
+    "config --global --add safe.directory $GITHUB_WORKSPACE/tests/fixtures : echo stubbed" \
+    "status -s --porcelain=v1 -z -- . : echo"
+
+  stub ghcommit \
+    '-b main -r org/repo -m msg --empty : echo Success. New commit: https://localhost/sub'
+
+  # Use --empty to force ghcommit to run even without staged changes, so we can
+  # verify the working directory change took effect (otherwise the stub for
+  # ghcommit would not be exercised).
+  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "true" "$file_pattern" "$repository"
+  assert_success
+  assert_output --partial "Repository path: $GITHUB_WORKSPACE/tests/fixtures"
+  assert_output --partial "Success"
+}
+
 @test "handles untracked files" {
   local commit_message='msg'
   local repo='org/repo'
@@ -87,7 +113,7 @@ setup() {
   export GITHUB_OUTPUT="$BATS_TEST_TMPDIR/github-output"
 
   stub git \
-    "config --global --add safe.directory $GITHUB_WORKSPACE : echo stubbed" \
+    "config --global --add safe.directory $GITHUB_WORKSPACE/. : echo stubbed" \
     "status -s --porcelain=v1 -z -- . : cat ./tests/fixtures/git-status.out-2 | tr '\n' '\0'"
 
   stub ghcommit \
