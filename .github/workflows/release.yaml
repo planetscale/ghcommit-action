@@ -5,7 +5,7 @@ name: release
 # on main branch merge:
 # 1. Calculate next semantic version tag (autotag)
 # 2. Build and push Dockerfile.base (ghcr.io/planetscale/ghcommit-action)
-# 3. Update version tag in Dockerfile, commit change
+# 3. Update image digest in Dockerfile, commit change
 # 4. Create GitHub Release for the new version
 
 on:
@@ -80,17 +80,21 @@ jobs:
 
       - name: Build and push Dockerfile.base (ghcr.io/planetscale/ghcommit-action)
         run: |
-          # build and push a multi-arch image:
+          set -euo pipefail
+          # build and push a multi-arch image, capturing the resulting digest:
           image="ghcr.io/planetscale/ghcommit-action:v${new_version}"
           docker buildx build \
             -f Dockerfile.base \
             --platform linux/amd64,linux/arm64 \
+            --metadata-file "${RUNNER_TEMP}/metadata.json" \
             --output type=image,name=$image,oci-mediatypes=true,compression=zstd,push=true \
             .
+          digest=$(jq -er '."containerimage.digest"' "${RUNNER_TEMP}/metadata.json")
+          echo "image_digest=${digest}" >> "${GITHUB_ENV}"
 
-      - name: Update image version in Dockerfile
+      - name: Update image digest in Dockerfile
         run: |
-          sed -i'' -Ee "s/ghcommit-action:v(.*)/ghcommit-action:v${new_version}/" Dockerfile
+          sed -i'' -Ee "s|ghcommit-action@sha256:[a-f0-9]+|ghcommit-action@${image_digest}|" Dockerfile
 
       - name: Commit changes
         uses: planetscale/ghcommit-action@343f41817a6a0f882f18bbc59fdd37f49452736f # v0.2.19
