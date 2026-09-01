@@ -26,7 +26,7 @@ jobs:
       (github.event_name == 'push' && !contains(toJson(github.event.commits), '[ci skip]') && !contains(toJson(github.event.commits), '[skip ci]'))
       || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - run: make lint
       - run: make test
 
@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: checkout code with full history (unshallow)
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -66,7 +66,7 @@ jobs:
           echo "new_version=$new_version" >> $GITHUB_ENV
 
       - name: login to ghcr.io
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -74,9 +74,9 @@ jobs:
 
       # setup qemu and buildx for cross-builds (arm64)
       - name: Set up QEMU (for arm64 builds)
-        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4
+        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4
 
       - name: Build and push Dockerfile.base (ghcr.io/planetscale/ghcommit-action)
         run: |
@@ -97,7 +97,7 @@ jobs:
           sed -i'' -Ee "s|ghcommit-action@sha256:[a-f0-9]+|ghcommit-action@${image_digest}|" Dockerfile
 
       - name: Commit changes
-        uses: planetscale/ghcommit-action@343f41817a6a0f882f18bbc59fdd37f49452736f # v0.2.19
+        uses: planetscale/ghcommit-action@a6b150b81dca5dd027baa898604418eec9e11465 # v0.2.22
         with:
           commit_message: "🤖 Bump version in Dockerfile"
           repo: ${{ github.repository }}
