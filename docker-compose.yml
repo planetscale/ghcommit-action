@@ -10,6 +10,6 @@ services:
       - 'shellcheck ./plugin/*.sh'
 
   tests:
-    image: buildkite/plugin-tester:v4.2.0@sha256:21067012f59af6b8316cceb95850e89a542b50338c72d209a68bbebb33aff8c3
+    image: buildkite/plugin-tester:v4.3.0@sha256:86c728d8526e22f5d26c1b65e2cae1dfb2d9767fe24d560563895d051b258c84
     volumes:
       - ".:/plugin:ro"
