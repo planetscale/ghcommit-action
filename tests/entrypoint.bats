@@ -125,3 +125,20 @@ setup() {
   assert_file_exist "$GITHUB_OUTPUT"
   assert_file_contains "$GITHUB_OUTPUT" "commit-url=https://localhost/bar"
 }
+
+@test "fails when git status fails" {
+  local commit_message='msg'
+  local repo='org/repo'
+  local branch='main'
+  local empty='false'
+  local file_pattern='.'
+
+  stub git \
+    "config --global --add safe.directory $GITHUB_WORKSPACE/. : echo stubbed" \
+    "status -s --porcelain=v1 -z -- . : echo 'fatal: bad object HEAD' >&2; exit 128"
+
+  run ./entrypoint.sh "$commit_message" "$repo" "$branch" "$empty" "$file_pattern"
+  assert_failure
+  assert_output --partial "fatal: bad object HEAD"
+  refute_output --partial "No changes detected"
+}
