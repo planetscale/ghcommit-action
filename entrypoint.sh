@@ -20,6 +20,11 @@ cd "$REPOSITORY_PATH"
 adds=()
 deletes=()
 
+# Written to a file rather than read via process substitution so a git failure trips `set -e`
+# instead of looking like an empty status. A variable can't hold the NUL-separated output.
+status_file=$(mktemp)
+git status -s --porcelain=v1 -z -- "${FILE_PATTERNS[@]}" >"$status_file"
+
 while IFS= read -r -d $'\0' line; do
   [[ -n "${DEBUG:-}" ]] && echo "line: '$line'"
 
@@ -63,7 +68,7 @@ while IFS= read -r -d $'\0' line; do
   # handle deletes (D):
   [[ "$tree_status" =~ D || "$index_status" =~ D ]] && deletes+=("$filename")
 
-done < <(git status -s --porcelain=v1 -z -- "${FILE_PATTERNS[@]}")
+done <"$status_file"
 
 if [[ "${#adds[@]}" -eq 0 && "${#deletes[@]}" -eq 0 && "$EMPTY" == "false" ]]; then
   echo "No changes detected, exiting"
